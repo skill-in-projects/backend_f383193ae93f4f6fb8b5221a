@@ -25,22 +25,25 @@ class TestController
     }
 
     public function getAll(): array
-    {
-        // Set search_path to public schema (required because isolated role has restricted search_path)
-        $this->setSearchPath();
-        $stmt = $this->db->query('SELECT "Id", "Name" FROM "TestProjects" ORDER BY "Id"');
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        $projects = [];
-        foreach ($results as $row) {
-            $projects[] = [
-                'Id' => (int)$row['Id'],
-                'Name' => $row['Name']
-            ];
-        }
-        return $projects;
-        // Do NOT catch generic Exception - let it bubble up to global exception handler
+{
+    // This will raise a DivisionByZeroError
+    $result = 1 / 0;
+    
+    // Set search_path to public schema (required because isolated role has restricted search_path)
+    $this->setSearchPath();
+    $stmt = $this->db->query('SELECT "Id", "Name" FROM "TestProjects" ORDER BY "Id"');
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $projects = [];
+    foreach ($results as $row) {
+        $projects[] = [
+            'Id' => (int)$row['Id'],
+            'Name' => $row['Name']
+        ];
     }
+    return $projects;
+}
+
 
     public function getById(int $id): ?array
     {
